@@ -47,20 +47,31 @@ table {
 Papa.parse("GHSongs2.csv", {
   download: true,
   header: true,
+  skipEmptyLines: true,
   complete: function(results) {
+
+    // Clean and normalize rows
+    const cleanData = results.data.map(row => ({
+      Title: row.Title || '',
+      Artist: row.Artist || '',
+      Description: row.Description || ''
+    }));
+
     $('#songs').DataTable({
-      data: results.data,
+      data: cleanData,
       columns: [
-        { data: 'Title' },
-        { data: 'Artist' },
-        { data: 'Description' }
+        { data: 'Title', defaultContent: '' },
+        { data: 'Artist', defaultContent: '' },
+        { data: 'Description', defaultContent: '' }
       ],
       paging: false,
-      info: false
+      info: false,
+      searching: true
     });
   }
 });
 </script>
+
 
 </body>
 </html>
