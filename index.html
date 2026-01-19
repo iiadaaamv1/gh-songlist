@@ -50,8 +50,12 @@ Papa.parse("GHSongs2.csv", {
   skipEmptyLines: true,
   complete: function(results) {
 
-    // Clean and normalize rows
-    const cleanData = results.data.map(row => ({
+    // Only keep rows that actually have the expected columns
+    const cleanData = results.data.filter(row =>
+      row.hasOwnProperty('Title') &&
+      row.hasOwnProperty('Artist') &&
+      row.hasOwnProperty('Description')
+    ).map(row => ({
       Title: row.Title || '',
       Artist: row.Artist || '',
       Description: row.Description || ''
@@ -60,17 +64,19 @@ Papa.parse("GHSongs2.csv", {
     $('#songs').DataTable({
       data: cleanData,
       columns: [
-        { data: 'Title', defaultContent: '' },
-        { data: 'Artist', defaultContent: '' },
-        { data: 'Description', defaultContent: '' }
+        { title: 'Title', data: 'Title' },
+        { title: 'Artist', data: 'Artist' },
+        { title: 'Description', data: 'Description' }
       ],
       paging: false,
       info: false,
-      searching: true
+      searching: true,
+      deferRender: true
     });
   }
 });
 </script>
+
 
 
 </body>
