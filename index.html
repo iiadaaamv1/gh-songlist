@@ -1,75 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Guitar Hero Song List</title>
-
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
-
-<style>
-body {
-  font-family: Arial, sans-serif;
-  margin: 10px;
-}
-h1 {
-  text-align: center;
-}
-table {
-  width: 100%;
-}
-.dataTables_filter input {
-  font-size: 18px;
-  padding: 6px;
-}
-</style>
-</head>
-
-<body>
-
-<h1>🎸 Guitar Hero Song List</h1>
-
-<table id="songs" class="display">
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Artist</th>
-      <th>Game</th>
-    </tr>
-  </thead>
-</table>
-
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-
-<script>
-Papa.parse("GHSongs2.csv", {
-  download: true,
-  header: true,
-  skipEmptyLines: true,
+skipEmptyLines: true,
   complete: function(results) {
 
+    // Clean and normalize rows
+    const cleanData = results.data.map(row => ({
     // Only keep rows that actually have the expected columns
     const cleanData = results.data.filter(row =>
       row.hasOwnProperty('Title') &&
       row.hasOwnProperty('Artist') &&
-      row.hasOwnProperty('Game')
+      row.hasOwnProperty('Description')
     ).map(row => ({
       Title: row.Title || '',
       Artist: row.Artist || '',
-      Game: row.Game || ''
-    }));
-
+      Description: row.Description || ''
+@@ -60,18 +64,20 @@ <h1>🎸 Guitar Hero Song List</h1>
     $('#songs').DataTable({
       data: cleanData,
       columns: [
+        { data: 'Title', defaultContent: '' },
+        { data: 'Artist', defaultContent: '' },
+        { data: 'Description', defaultContent: '' }
         { title: 'Title', data: 'Title' },
         { title: 'Artist', data: 'Artist' },
-        { title: 'Game', data: 'Game' }
+        { title: 'Description', data: 'Description' }
       ],
       paging: false,
       info: false,
+      searching: true
       searching: true,
       deferRender: true
     });
