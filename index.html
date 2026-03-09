@@ -18,9 +18,16 @@ h1 {
 table {
   width: 100%;
 }
+.dataTables_filter {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
 .dataTables_filter input {
-  font-size: 18px;
-  padding: 6px;
+  font-size: 20px;
+  padding: 10px;
+  width: 80%;
+  max-width: 400px;
 }
 </style>
 </head>
@@ -65,7 +72,10 @@ Papa.parse("GHSongs2.csv", {
       Artist: row.Artist || '',
       Game: row.Game || ''
     }));
-
+    
+document.getElementById("songCount").innerText =
+  cleanData.length + " songs available";
+    
     $('#songs').DataTable({
       data: cleanData,
       columns: [
